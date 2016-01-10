@@ -24,7 +24,7 @@ activity.data = mutate(activity.data, date = as.Date(activity.data$date, "%Y-%m-
 total.steps.per.day = ddply(activity.data, .(date), summarize, total.steps = sum(steps))
 
 total.steps = with(total.steps.per.day, total.steps[!is.na(total.steps)])
-hist(total.steps, breaks = 10)
+hist(total.steps, breaks = 10, main = "Histogram of Total Steps", xlab = "Number of Steps")
 ```
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
@@ -54,7 +54,7 @@ The mean total number of steps taken per day is 10766.19, and the median is 1076
 
 ```r
 mean.steps.per.interval = ddply(activity.data, .(interval), summarize, mean.steps = mean(steps, na.rm = T))
-with(mean.steps.per.interval, plot(interval, mean.steps, type="l"))
+with(mean.steps.per.interval, plot(interval, mean.steps, type="l"), main = "Mean Steps per Inteval", xlab = "Interval", ylab = "Number of Steps")
 ```
 
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png)
@@ -91,7 +91,7 @@ activity.data.imputed$steps[is.na(activity.data.imputed$steps)] = mean.steps.per
 
 total.steps.per.day.imputed = ddply(activity.data.imputed, .(date), summarize, total.steps = sum(steps))
 total.steps.imputed = total.steps.per.day.imputed$total.steps
-hist(total.steps.imputed, breaks = 10)
+hist(total.steps.imputed, breaks = 10, main = "Histogram of Total Steps with Imputed Values", xlab = "Number of Steps")
 ```
 
 ![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png)
@@ -114,7 +114,7 @@ print(median.total.steps.imputed)
 ## [1] 10766.19
 ```
 
-The mean total steps taken per day is still 10766.19, but the median is now 10766.19, the same as the mean. This makes sense, as we've added eight more days to the dataset where the total number of steps is equal to the mean number of steps  
+The mean total steps taken per day is still 10766.19, but the median is now 10766.19, the same as the mean. This makes sense, as we've added eight more days to the dataset where the total number of steps is equal to the mean number of steps. This is clearly visible in the new histogram.  
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -126,7 +126,7 @@ day.of.week =
 activity.data.imputed$day.of.week = day.of.week
 mean.steps.per.interval.imputed = 
     ddply(activity.data, .(day.of.week, interval), summarize, mean.steps = mean(steps, na.rm = T))
-with(mean.steps.per.interval.imputed, qplot(interval, as.integer(mean.steps), geom="line", facets = (day.of.week ~ .)))
+with(mean.steps.per.interval.imputed, qplot(interval, as.integer(mean.steps), geom="line", facets = (day.of.week ~ .), main = "Mean Steps per Inteval with Imputed Values", xlab = "Interval", ylab = "Number of Steps"))
 ```
 
 ![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png)
