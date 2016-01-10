@@ -11,21 +11,35 @@ library(dplyr)
 ## Loading and preprocessing the data
 
 activity.data = read.csv(unz("activity.zip", "activity.csv"))
-activity.data = mutate(activity.data, date = as.Date(activity_data$date, "%Y-%m-%d"), interval = as.factor(interval))
+
+activity.data = mutate(activity.data, date = as.Date(activity_data$date, "%Y-%m-%d"))
 
 ## What is mean total number of steps taken per day?
 
-steps.per.day = ddply(activity.data, .(date), summarize, total.steps = sum(steps))
-step.totals = with(steps.per.day, total.steps[!is.na(total.steps)])
-hist(step.totals, breaks = 10)
-mean(step.totals)
-median(step.totals)
+total.steps.per.day = ddply(activity.data, .(date), summarize, total.steps = sum(steps))
+
+total.steps = with(total.steps.per.day, total.steps[!is.na(total.steps)])
+hist(total.steps, breaks = 10)
+
+mean.total.steps = mean(total.steps)
+print(mean.total.steps)
+median.total.steps = median(total.steps)
+print(median.total.steps)
 
 ## What is the average daily activity pattern?
 
-with(subset(steps.per.day, !is.na(total.steps)), plot(date, total.steps, type="l"))
+mean.steps.per.interval = ddply(activity.data, .(interval), summarize, mean.steps = mean(steps, na.rm = T))
+with(mean.steps.per.interval, plot(interval, mean.steps, type="l"))
+
+interval.with.max.mean.steps = with(mean.steps.per.interval, interval[which.max(mean.steps)])
+print(interval.with.max.mean.steps)
 
 ## Imputing missing values
+
+total.na = sum(is.na(activity.data$steps))
+print(total.na)
+
+# There is only missing data when there are no measurements whatsoever for an entire day. Therefore, we must transplant information from the other days in the dataset. The most unbiased procedure available is to take the mean steps from every recorded interval as the reported steps for missing intervals. Given that these means will typically be floating point numbers, we must convert the steps column from integer to numeric so as not to introduce a rounding error
 
 
 
