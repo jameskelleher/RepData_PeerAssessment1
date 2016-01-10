@@ -5,18 +5,25 @@ output:
     keep_md: true
 ---
 
+library(plyr)
+library(dplyr)
 
 ## Loading and preprocessing the data
 
-
+activity.data = read.csv(unz("activity.zip", "activity.csv"))
+activity.data = mutate(activity.data, date = as.Date(activity_data$date, "%Y-%m-%d"), interval = as.factor(interval))
 
 ## What is mean total number of steps taken per day?
 
-
+steps.per.day = ddply(activity.data, .(date), summarize, total.steps = sum(steps))
+step.totals = with(steps.per.day, total.steps[!is.na(total.steps)])
+hist(step.totals, breaks = 10)
+mean(step.totals)
+median(step.totals)
 
 ## What is the average daily activity pattern?
 
-
+with(subset(steps.per.day, !is.na(total.steps)), plot(date, total.steps, type="l"))
 
 ## Imputing missing values
 
