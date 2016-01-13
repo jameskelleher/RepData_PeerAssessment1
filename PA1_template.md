@@ -54,7 +54,7 @@ The mean total number of steps taken per day is 10766.19, and the median is 1076
 
 ```r
 mean.steps.per.interval = ddply(activity.data, .(interval), summarize, mean.steps = mean(steps, na.rm = T))
-with(mean.steps.per.interval, plot(interval, mean.steps, type="l"), main = "Mean Steps per Inteval", xlab = "Interval", ylab = "Number of Steps")
+with(mean.steps.per.interval, plot(interval, mean.steps, type="l", main = "Mean Steps per Inteval", xlab = "Interval", ylab = "Number of Steps"))
 ```
 
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png)
